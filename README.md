@@ -12,6 +12,7 @@ Requirements
 ## Platform
 
 * Ubuntu 11.10
+* CentOS 6.4
 
 (Ubuntu 10.04 was tested but thrift would not compile cleanly)
 
