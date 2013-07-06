@@ -24,12 +24,12 @@ include_recipe "boost"
 include_recipe "python"
 
 case node.platform_family
-when "debian"
-  %w{ flex bison libtool autoconf pkg-config }.each do |pkg|
-    package pkg
-  end
 when "rhel", "fedora"
   %w{ flex bison libtool autoconf pkgconfig }.each do |pkg|
+    package pkg
+  end
+else
+  %w{ flex bison libtool autoconf pkg-config }.each do |pkg|
     package pkg
   end
 end
