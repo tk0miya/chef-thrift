@@ -29,9 +29,8 @@ end
 
 remote_file "#{Chef::Config[:file_cache_path]}/thrift-#{version}.tar.gz" do
   source "#{node['thrift']['mirror']}/thrift/#{version}/thrift-#{version}.tar.gz"
-  not_if { FileTest.exists?("/usr/local/bin/thrift") }
   checksum node['thrift']['checksum']
-  notifies :run, "bash[install_thrift]", :immediately
+  action :create_if_missing
 end
 
 bash "install_thrift" do
@@ -41,11 +40,5 @@ bash "install_thrift" do
     (cd thrift-#{version} && ./configure #{node['thrift']['configure_options'].join(' ')})
     (cd thrift-#{version} && make install)
   EOH
-  only_if { FileTest.exists?("#{Chef::Config[:file_cache_path]}/thrift-#{version}.tar.gz") }
-  action :run
-end
-
-file "thrift-tarball-cleanup" do
-  path "#{Chef::Config[:file_cache_path]}/thrift-#{version}.tar.gz"
-  action :delete
+  not_if { FileTest.exists?("/usr/local/bin/thrift") and `thrift -version`.index(version) }
 end
